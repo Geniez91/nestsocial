@@ -9,7 +9,7 @@ import { FindOneOptions, Repository } from 'typeorm';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {

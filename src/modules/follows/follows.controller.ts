@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
 } from '@nestjs/common';
 import { FollowsService } from './follows.service';
 import { CreateFollowDto } from './dto/create-follow.dto';
@@ -16,6 +17,7 @@ export class FollowsController {
   constructor(private readonly followsService: FollowsService) {}
 
   @Post()
+  @HttpCode(201)
   create(@Body() createFollowDto: CreateFollowDto) {
     return this.followsService.create(createFollowDto);
   }
@@ -31,6 +33,7 @@ export class FollowsController {
   }
 
   @Patch(':id')
+  @HttpCode(200)
   update(@Param('id') id: string, @Body() updateFollowDto: UpdateFollowDto) {
     return this.followsService.update(+id, updateFollowDto);
   }
