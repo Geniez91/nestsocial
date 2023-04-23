@@ -9,7 +9,7 @@ import { FindOneOptions, Repository } from 'typeorm';
 export class PostsService {
   constructor(
     @InjectRepository(Post)
-    private readonly postRepository: Repository<Post>,
+    private readonly postRepository: Repository<Post>
   ) {}
 
   create(createPostDto: CreatePostDto): Promise<Post> {
@@ -40,7 +40,7 @@ export class PostsService {
     const deletePost = await this.postRepository.findOneBy({
       idPost: id,
     });
-    await this.postRepository.delete(deletePost);
+    await this.postRepository.remove(deletePost);
     return deletePost;
   }
 }

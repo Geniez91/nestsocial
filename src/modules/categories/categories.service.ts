@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 export class CategoriesService {
   constructor(
     @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    private readonly categoryRepository: Repository<Category>
   ) {}
 
   create(createCategoryDto: CreateCategoryDto): Promise<Category> {
@@ -30,7 +30,7 @@ export class CategoriesService {
 
   async update(
     id: number,
-    updateCategoryDto: UpdateCategoryDto,
+    updateCategoryDto: UpdateCategoryDto
   ): Promise<Category> {
     const oldCategory = await this.categoryRepository.findOneBy({
       idCategory: id,

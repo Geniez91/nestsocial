@@ -36,7 +36,7 @@ export class CategoriesController {
   @HttpCode(200)
   update(
     @Param('id') id: string,
-    @Body() updateCategoryDto: UpdateCategoryDto,
+    @Body() updateCategoryDto: UpdateCategoryDto
   ) {
     return this.categoriesService.update(+id, updateCategoryDto);
   }

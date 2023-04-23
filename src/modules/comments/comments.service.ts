@@ -9,7 +9,7 @@ import { FindOneOptions, Repository } from 'typeorm';
 export class CommentsService {
   constructor(
     @InjectRepository(Comment)
-    private readonly commentsRepository: Repository<Comment>,
+    private readonly commentsRepository: Repository<Comment>
   ) {}
 
   create(createCommentDto: CreateCommentDto): Promise<Comment> {
@@ -30,7 +30,7 @@ export class CommentsService {
 
   async update(
     id: number,
-    updateCommentDto: UpdateCommentDto,
+    updateCommentDto: UpdateCommentDto
   ): Promise<Comment> {
     const oldComments = await this.commentsRepository.findOneBy({
       idComment: id,

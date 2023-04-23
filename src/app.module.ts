@@ -12,7 +12,6 @@ import { Post } from './modules/posts/entities/post.entity';
 import { Comment } from './modules/comments/entities/comment.entity';
 import { Follow } from './modules/follows/entities/follow.entity';
 import { Category } from './modules/categories/entities/category.entity';
-import { DataSource } from 'typeorm';
 
 @Module({
   imports: [
@@ -24,7 +23,8 @@ import { DataSource } from 'typeorm';
       password: '',
       database: 'nestjssocial',
       entities: [User, Post, Comment, Follow, Category],
-      synchronize: true, // crée les tables de la db
+      // synchronize: true, // crée les tables de la db
+      autoLoadEntities: true,
     }),
     UsersModule,
     PostsModule,
