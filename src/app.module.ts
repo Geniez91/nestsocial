@@ -7,12 +7,15 @@ import { PostsModule } from './modules/posts/posts.module';
 import { FollowsModule } from './modules/follows/follows.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { LikesModule } from './modules/likes/likes.module.ts';
 import { User } from './modules/users/entities/user.entity';
 import { Post } from './modules/posts/entities/post.entity';
 import { Comment } from './modules/comments/entities/comment.entity';
 import { Follow } from './modules/follows/entities/follow.entity';
 import { Category } from './modules/categories/entities/category.entity';
 import { DataSource } from 'typeorm';
+import { LikesService } from './likes/likes.service';
+
 
 @Module({
   imports: [
@@ -31,8 +34,9 @@ import { DataSource } from 'typeorm';
     FollowsModule,
     CommentsModule,
     CategoriesModule,
+    LikesModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, LikesService],
 })
 export class AppModule {}
