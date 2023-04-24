@@ -12,7 +12,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
-import { UpdateUserFollowDto } from './dto/update-follow.dto';
+import { UserFollowDto } from './dto/update-follow.dto';
 
 @Controller('users')
 export class UsersController {
@@ -56,15 +56,18 @@ export class UsersController {
   }
 
   @Patch(':id/follow')
-  async followUser(@Param('id') id: number, @Body() body: User): Promise<void> {
+  async followUser(
+    @Param('id') id: number,
+    @Body() body: User,
+  ): Promise<UserFollowDto[]> {
     return await this.usersService.followUser(id, body);
   }
 
   @Patch(':id/unfollow')
   async unfollowUser(
     @Param('id') id: number,
-    @Body() body: User
-  ): Promise<void> {
+    @Body() body: User,
+  ): Promise<UserFollowDto[]> {
     return await this.usersService.unfollowUser(id, body);
   }
 }

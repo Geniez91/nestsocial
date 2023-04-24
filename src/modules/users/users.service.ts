@@ -4,13 +4,13 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOneOptions, Repository } from 'typeorm';
-import { UpdateUserFollowDto } from './dto/update-follow.dto';
+import { UserFollowDto } from './dto/update-follow.dto';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>
+    private readonly userRepository: Repository<User>,
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
@@ -60,7 +60,7 @@ export class UsersService {
     });
   }
 
-  async followUser(id: number, userFollow: User): Promise<void> {
+  async followUser(id: number, userFollow: User): Promise<UserFollowDto[]> {
     const userFollowed: FindOneOptions<User> = {
       relations: ['followers'],
       where: {
@@ -69,7 +69,7 @@ export class UsersService {
     };
 
     const getUserFollowed = await this.userRepository.findOneOrFail(
-      userFollowed
+      userFollowed,
     );
 
     const userFollowing: FindOneOptions<User> = {
@@ -78,8 +78,19 @@ export class UsersService {
     };
 
     const getUserFollowing = await this.userRepository.findOneOrFail(
-      userFollowing
+      userFollowing,
     );
+
+    const isAlreadyFollowing = getUserFollowed.followers.some(
+      (follower) => follower.idUser === getUserFollowing.idUser,
+    );
+
+    if (isAlreadyFollowing) {
+      return [
+        { ...getUserFollowed, followers: getUserFollowed.followers },
+        { ...getUserFollowing, following: getUserFollowing.following },
+      ];
+    }
 
     getUserFollowed.followers.push(getUserFollowing);
     getUserFollowing.following.push(getUserFollowed);
@@ -87,10 +98,27 @@ export class UsersService {
     await this.userRepository.save(getUserFollowed);
     await this.userRepository.save(getUserFollowing);
 
-    // const userDTO = new UpdateUserFollowDto(getUserFollowed);
+    const followers = getUserFollowed.followers.map((follower) => ({
+      idUser: follower.idUser,
+      username: follower.username,
+      name: follower.name,
+      profil_image: follower.profil_image,
+    }));
+
+    const following = getUserFollowing.following.map((followed) => ({
+      idUser: followed.idUser,
+      username: followed.username,
+      name: followed.name,
+      profil_image: followed.profil_image,
+    }));
+
+    return [
+      { ...getUserFollowed, followers },
+      { ...getUserFollowing, following },
+    ];
   }
 
-  async unfollowUser(id: number, userFollow: User): Promise<void> {
+  async unfollowUser(id: number, userFollow: User): Promise<UserFollowDto[]> {
     const userFollowing: FindOneOptions<User> = {
       relations: ['following'],
       where: {
@@ -99,7 +127,7 @@ export class UsersService {
     };
 
     const getUserFollowing = await this.userRepository.findOneOrFail(
-      userFollowing
+      userFollowing,
     );
 
     const userFollowed: FindOneOptions<User> = {
@@ -108,18 +136,37 @@ export class UsersService {
     };
 
     const getUserFollowed = await this.userRepository.findOneOrFail(
-      userFollowed
+      userFollowed,
     );
 
     getUserFollowing.following = getUserFollowing.following.filter(
-      (user) => user.idUser !== userFollow.idUser
+      (user) => user.idUser !== userFollow.idUser,
     );
 
     getUserFollowed.followers = getUserFollowed.followers.filter(
-      (user) => user.idUser !== getUserFollowing.idUser
+      (user) => user.idUser !== getUserFollowing.idUser,
     );
+
+    const followers = getUserFollowed.followers.map((follower) => ({
+      idUser: follower.idUser,
+      username: follower.username,
+      name: follower.name,
+      profil_image: follower.profil_image,
+    }));
+
+    const following = getUserFollowing.following.map((followed) => ({
+      idUser: followed.idUser,
+      username: followed.username,
+      name: followed.name,
+      profil_image: followed.profil_image,
+    }));
 
     await this.userRepository.save(getUserFollowing);
     await this.userRepository.save(getUserFollowed);
+
+    return [
+      { ...getUserFollowing, followers },
+      { ...getUserFollowed, following },
+    ];
   }
 }
