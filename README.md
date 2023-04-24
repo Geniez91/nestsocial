@@ -1,6 +1,6 @@
-## Projet NESTJSSOCIAL - RAYAN JEREMY TONY
+## Projet NESTJSSOCIAL - Rayan MAMACHE, Jeremy WELTMANN, Tony OSEI AGYEMANG
 
-La db est à la racine du projet.
+La db est à la racine du projet, elle porte le nom de "nestjssocial.sql"
 
 Voici l'url de la collection Postman pour vous faciliter la tâche:
 Importez la sur votre postman desktop
