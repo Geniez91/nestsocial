@@ -23,10 +23,16 @@ export class Post {
   @Column()
   video: string;
 
-  @ManyToOne(() => User, (user) => user.posts, { eager: true })
+  @ManyToOne(() => User, (user) => user.posts, {
+    eager: true,
+    onDelete: 'CASCADE',
+  })
   user: User;
 
-  @ManyToOne(() => Category, (category) => category.posts, { eager: true })
+  @ManyToOne(() => Category, (category) => category.posts, {
+    eager: true,
+    onDelete: 'SET NULL',
+  })
   category: Category;
 
   @OneToMany(() => Comment, (comment) => comment.post, {

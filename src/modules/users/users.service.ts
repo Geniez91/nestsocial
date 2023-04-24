@@ -10,7 +10,7 @@ import { UserFollowDto } from './dto/update-follow.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>
   ) {}
 
   create(createUserDto: CreateUserDto): Promise<User> {
@@ -46,20 +46,6 @@ export class UsersService {
     return deleteUser;
   }
 
-  async getUsersFollowingMe(idUser: number): Promise<User[]> {
-    return this.userRepository.find({
-      relations: ['followers', 'following'],
-      where: { idUser },
-    });
-  }
-
-  async getUsersIFollow(idUser: number): Promise<User[]> {
-    return this.userRepository.find({
-      relations: ['following', 'followers'],
-      where: { idUser },
-    });
-  }
-
   async followUser(id: number, userFollow: User): Promise<UserFollowDto[]> {
     const userFollowed: FindOneOptions<User> = {
       relations: ['followers'],
@@ -69,7 +55,7 @@ export class UsersService {
     };
 
     const getUserFollowed = await this.userRepository.findOneOrFail(
-      userFollowed,
+      userFollowed
     );
 
     const userFollowing: FindOneOptions<User> = {
@@ -78,11 +64,11 @@ export class UsersService {
     };
 
     const getUserFollowing = await this.userRepository.findOneOrFail(
-      userFollowing,
+      userFollowing
     );
 
     const isAlreadyFollowing = getUserFollowed.followers.some(
-      (follower) => follower.idUser === getUserFollowing.idUser,
+      (follower) => follower.idUser === getUserFollowing.idUser
     );
 
     if (isAlreadyFollowing) {
@@ -127,7 +113,7 @@ export class UsersService {
     };
 
     const getUserFollowing = await this.userRepository.findOneOrFail(
-      userFollowing,
+      userFollowing
     );
 
     const userFollowed: FindOneOptions<User> = {
@@ -136,15 +122,15 @@ export class UsersService {
     };
 
     const getUserFollowed = await this.userRepository.findOneOrFail(
-      userFollowed,
+      userFollowed
     );
 
     getUserFollowing.following = getUserFollowing.following.filter(
-      (user) => user.idUser !== userFollow.idUser,
+      (user) => user.idUser !== userFollow.idUser
     );
 
     getUserFollowed.followers = getUserFollowed.followers.filter(
-      (user) => user.idUser !== getUserFollowing.idUser,
+      (user) => user.idUser !== getUserFollowing.idUser
     );
 
     const followers = getUserFollowed.followers.map((follower) => ({

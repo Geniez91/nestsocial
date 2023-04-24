@@ -45,20 +45,10 @@ export class UsersController {
     return this.usersService.remove(+id);
   }
 
-  @Get(':id/followers')
-  async getFollowers(@Param('id') id: number): Promise<User[]> {
-    return await this.usersService.getUsersFollowingMe(id);
-  }
-
-  @Get(':id/following')
-  async getFollowing(@Param('id') id: number): Promise<User[]> {
-    return await this.usersService.getUsersIFollow(id);
-  }
-
   @Patch(':id/follow')
   async followUser(
     @Param('id') id: number,
-    @Body() body: User,
+    @Body() body: User
   ): Promise<UserFollowDto[]> {
     return await this.usersService.followUser(id, body);
   }
@@ -66,7 +56,7 @@ export class UsersController {
   @Patch(':id/unfollow')
   async unfollowUser(
     @Param('id') id: number,
-    @Body() body: User,
+    @Body() body: User
   ): Promise<UserFollowDto[]> {
     return await this.usersService.unfollowUser(id, body);
   }
