@@ -7,7 +7,6 @@ import {
   ManyToMany,
 } from 'typeorm';
 import { Post } from 'src/modules/posts/entities/post.entity';
-import { Follow } from 'src/modules/follows/entities/follow.entity';
 
 @Entity()
 export class User {

@@ -60,11 +60,11 @@ export class UsersController {
     return await this.usersService.followUser(id, body);
   }
 
-  // @Post(':id/unfollow')
-  // async unfollowUser(
-  //   @Param('id') id: number,
-  //   @Body() body: UpdateUserFollowDto
-  // ): Promise<void> {
-  //   return await this.usersService.unfollowUser(id, body);
-  // }
+  @Patch(':id/unfollow')
+  async unfollowUser(
+    @Param('id') id: number,
+    @Body() body: User
+  ): Promise<void> {
+    return await this.usersService.unfollowUser(id, body);
+  }
 }

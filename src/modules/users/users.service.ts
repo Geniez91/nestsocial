@@ -18,13 +18,14 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  findAll(): Promise<User[]> {
-    return this.userRepository.find();
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find({ relations: ['followers', 'following'] });
   }
 
   findOne(id: number): Promise<User | null> {
     const params: FindOneOptions<User> = {
       where: { idUser: id },
+      relations: ['followers', 'following'],
     };
     return this.userRepository.findOne(params);
   }
@@ -87,5 +88,38 @@ export class UsersService {
     await this.userRepository.save(getUserFollowing);
 
     // const userDTO = new UpdateUserFollowDto(getUserFollowed);
+  }
+
+  async unfollowUser(id: number, userFollow: User): Promise<void> {
+    const userFollowing: FindOneOptions<User> = {
+      relations: ['following'],
+      where: {
+        idUser: id,
+      },
+    };
+
+    const getUserFollowing = await this.userRepository.findOneOrFail(
+      userFollowing
+    );
+
+    const userFollowed: FindOneOptions<User> = {
+      relations: ['followers'],
+      where: { idUser: userFollow.idUser },
+    };
+
+    const getUserFollowed = await this.userRepository.findOneOrFail(
+      userFollowed
+    );
+
+    getUserFollowing.following = getUserFollowing.following.filter(
+      (user) => user.idUser !== userFollow.idUser
+    );
+
+    getUserFollowed.followers = getUserFollowed.followers.filter(
+      (user) => user.idUser !== getUserFollowing.idUser
+    );
+
+    await this.userRepository.save(getUserFollowing);
+    await this.userRepository.save(getUserFollowed);
   }
 }
