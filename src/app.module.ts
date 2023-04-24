@@ -23,7 +23,7 @@ import { Category } from './modules/categories/entities/category.entity';
       password: '',
       database: 'nestjssocial',
       entities: [User, Post, Comment, Follow, Category],
-      // synchronize: true, // crée les tables de la db
+      synchronize: true, // crée les tables de la db
       autoLoadEntities: true,
     }),
     UsersModule,

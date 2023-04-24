@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinTable,
+  ManyToMany,
+} from 'typeorm';
 import { Post } from 'src/modules/posts/entities/post.entity';
 import { Follow } from 'src/modules/follows/entities/follow.entity';
 
@@ -22,9 +29,10 @@ export class User {
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
 
-  @OneToMany(() => Follow, (follow) => follow.follower)
-  following: Follow[];
+  @ManyToMany(() => User, (user) => user.followers)
+  following: User[];
 
-  @OneToMany(() => Follow, (follow) => follow.followed)
-  followers: Follow[];
+  @ManyToMany(() => User, (user) => user.following)
+  @JoinTable()
+  followers: User[];
 }

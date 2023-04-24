@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { FindOneOptions, Repository } from 'typeorm';
+import { UpdateUserFollowDto } from './dto/update-follow.dto';
 
 @Injectable()
 export class UsersService {
@@ -42,5 +43,49 @@ export class UsersService {
     });
     await this.userRepository.delete(deleteUser);
     return deleteUser;
+  }
+
+  async getUsersFollowingMe(idUser: number): Promise<User[]> {
+    return this.userRepository.find({
+      relations: ['followers', 'following'],
+      where: { idUser },
+    });
+  }
+
+  async getUsersIFollow(idUser: number): Promise<User[]> {
+    return this.userRepository.find({
+      relations: ['following', 'followers'],
+      where: { idUser },
+    });
+  }
+
+  async followUser(id: number, userFollow: User): Promise<void> {
+    const userFollowed: FindOneOptions<User> = {
+      relations: ['followers'],
+      where: {
+        idUser: id,
+      },
+    };
+
+    const getUserFollowed = await this.userRepository.findOneOrFail(
+      userFollowed
+    );
+
+    const userFollowing: FindOneOptions<User> = {
+      relations: ['following'],
+      where: { idUser: userFollow.idUser },
+    };
+
+    const getUserFollowing = await this.userRepository.findOneOrFail(
+      userFollowing
+    );
+
+    getUserFollowed.followers.push(getUserFollowing);
+    getUserFollowing.following.push(getUserFollowed);
+
+    await this.userRepository.save(getUserFollowed);
+    await this.userRepository.save(getUserFollowing);
+
+    // const userDTO = new UpdateUserFollowDto(getUserFollowed);
   }
 }
